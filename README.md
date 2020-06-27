@@ -1,6 +1,6 @@
 # LinkedinBot
 
-Web browser automation to create leads for your Linkedin profile.
+Web browser automation to create more leads for your Linkedin profile!
 
 Must have installed:
 -> Python
