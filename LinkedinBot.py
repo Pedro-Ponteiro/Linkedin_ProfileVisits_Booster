@@ -45,7 +45,7 @@ def real():
 
     cont = 0
     links = []
-    step = 10
+    step = 50
     while True:
         cont += 1
         bod.send_keys(Keys.LEFT_CONTROL + Keys.END)
