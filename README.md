@@ -8,6 +8,4 @@ Must have installed:
 -> selenium package
 -> Google Chrome
 
-To use the app, leave me a message and I will be more then happy to teach you how to use it.
-
-linkedin: https://www.linkedin.com/in/prado-356461181/
+To use the app, leave me a message and I will be more than happy to teach you how to use it.
