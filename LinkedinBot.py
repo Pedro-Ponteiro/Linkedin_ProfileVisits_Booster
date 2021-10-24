@@ -1,7 +1,8 @@
 import getpass
-import os
+import logging
 import time
 import traceback
+import warnings
 from random import randint, random
 from typing import List, Tuple
 
@@ -9,6 +10,10 @@ import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.remote_connection import LOGGER
+
+warnings.filterwarnings("ignore")
+LOGGER.setLevel(logging.WARNING)
 
 
 def get_profiles_not_to_visit() -> List[str]:
@@ -29,9 +34,36 @@ def check_user_sign_out(wd: webdriver) -> None:
 
 def get_webdriver() -> webdriver:
 
-    chromedriver_autoinstaller.install(cwd=True)
-    wd_path = os.path.join(os.getcwd(), "chromedriver.exe")
-    return webdriver.Chrome(executable_path=wd_path)
+    chromedriver_autoinstaller.install()
+    wd = webdriver.Chrome()
+    wd.maximize_window()
+
+    return wd
+
+
+def get_role_titles() -> List[str]:
+    return [
+        "analista de dados",
+        "business intelligence",
+        "cientista de dados",
+        "data analyst",
+        "data analytics",
+        "data engineer",
+        "data science",
+        "data scientist",
+        "desenvolvedor",
+        "developer",
+        "engenheiro de dados",
+        "executive",
+        "full stack",
+        "full-stack",
+        "fullstack",
+        "head",
+        "HR",
+        "machine learning",
+        "python",
+        "statistician",
+    ]
 
 
 def get_profiles_visited() -> List[str]:
@@ -52,33 +84,61 @@ class RecommendationPage:
         wd.get("https://www.linkedin.com/mynetwork/")
 
     def collect_profiles_to_visit(
-        self, number_of_profiles: int, profiles_not_to_visit: List[str]
+        self,
+        number_of_profiles: int,
+        profiles_not_to_visit: List[str],
+        mandatory_role_words: List[str],
     ) -> List[str]:
-        profile_elem_xpath = "//a[@data-control-name='pymk_profile']"
+        """Collects profiles for visiting later
+
+        Args:
+            number_of_profiles (int): number of profiles to visit
+            profiles_not_to_visit (List[str]): list of profiles not to visit
+            mandatory_role_words (List[str]): will only visit profiles whose roles have one of these words
+            excluded_roles (List[str]): will NOT visit profiles whose roles have one of these words
+
+        Returns:
+            List[str]: list of profiles collected to visit
+        """
+
+        profile_elem_xpath = "//a[span[text() = 'Member’s name']]"
 
         body = self.wd.find_element_by_xpath("//body")
 
         cont = 0
         profile_links = []
-        step = 25
+        step = 50
         while True:
-
             check_user_sign_out(self.wd)
-
             cont += 1
             body.send_keys(Keys.END)
             time.sleep(randint(1, 2) * random() + 1)
             if cont == 1 or cont % step == 0:
                 profile_links.clear()
                 profiles_elements = self.wd.find_elements_by_xpath(profile_elem_xpath)
+                print("All profiles found: ", len(profiles_elements))
                 for prof_elem in profiles_elements:
                     if prof_elem.get_attribute("href") not in profiles_not_to_visit:
-                        profile_links.append(prof_elem.get_attribute("href"))
+                        if self.check_job_title(prof_elem, mandatory_role_words):
+                            profile_links.append(prof_elem.get_attribute("href"))
                 if len(profile_links) >= number_of_profiles:
                     print("Finished collecting profiles to visit")
                     break
+                print(f"Collected ({len(profile_links)}/{number_of_profiles})")
 
-        return profile_links
+        return profile_links[:number_of_profiles]
+
+    def check_job_title(self, profile_element, mandatory_role_words) -> bool:
+        try:
+            role_title = profile_element.find_element_by_xpath(
+                "./span[contains(@class, 'occupation') and contains(@class, 'person-card')]"
+            ).text.lower()
+        except NoSuchElementException:
+            return False
+
+        if any([w.lower() in role_title for w in mandatory_role_words]):
+            return True
+        return False
 
 
 class LoginPage:
@@ -132,8 +192,9 @@ def main() -> None:
 
         LoginPage(wd).login(email, password)
         profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
-            number_of_profiles=100,
+            number_of_profiles=50,
             profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
+            mandatory_role_words=get_role_titles(),
         )
 
         profiles_visited_now: List[str] = []
@@ -147,7 +208,7 @@ def main() -> None:
         finally:
             all_profiles_visited = profiles_visited + profiles_visited_now
             with open("profiles_visited.txt", "w") as f:
-                f.writelines(all_profiles_visited)
+                f.writelines("\n".join(all_profiles_visited))
             print("Exiting...")
 
 
