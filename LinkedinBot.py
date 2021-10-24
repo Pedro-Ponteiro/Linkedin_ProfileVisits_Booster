@@ -42,6 +42,7 @@ def get_webdriver() -> webdriver:
 
 
 def get_role_titles() -> List[str]:
+    # TODO: customize this as you want
     return [
         "analista de dados",
         "business intelligence",
