@@ -7,8 +7,8 @@ from random import randint, random
 from typing import List, Tuple
 
 import chromedriver_autoinstaller
-from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.remote_connection import LOGGER
 
@@ -22,7 +22,7 @@ def get_profiles_not_to_visit() -> List[str]:
     return [l.strip() for l in profiles_not_to_visit]
 
 
-def check_user_sign_out(wd: webdriver) -> None:
+def check_user_sign_out(wd: Chrome) -> None:
     try:
         wd.find_element_by_xpath(
             "//a[@data-tracking-control-name='public_profile_nav-header-signin']"
@@ -32,10 +32,10 @@ def check_user_sign_out(wd: webdriver) -> None:
         return
 
 
-def get_webdriver() -> webdriver:
+def get_webdriver() -> Chrome:
 
     chromedriver_autoinstaller.install()
-    wd = webdriver.Chrome()
+    wd = Chrome()
     wd.maximize_window()
 
     return wd
@@ -80,7 +80,7 @@ def get_credentials() -> Tuple[str, str]:
 
 
 class RecommendationPage:
-    def __init__(self, wd: webdriver) -> None:
+    def __init__(self, wd: Chrome) -> None:
         self.wd = wd
         wd.get("https://www.linkedin.com/mynetwork/")
 
@@ -143,7 +143,7 @@ class RecommendationPage:
 
 
 class LoginPage:
-    def __init__(self, wd: webdriver) -> None:
+    def __init__(self, wd: Chrome) -> None:
         self.wd = wd
         wd.get(
             "https://www.linkedin.com/uas/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fmynetwork%2F&fromSignIn=true&trk=cold_join_sign_in"
@@ -157,7 +157,7 @@ class LoginPage:
 
 
 class ProfilePage:
-    def __init__(self, wd: webdriver) -> None:
+    def __init__(self, wd: Chrome) -> None:
         self.wd = wd
 
     def interact(self, profile_link: str) -> None:
@@ -193,7 +193,7 @@ def main() -> None:
 
         LoginPage(wd).login(email, password)
         profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
-            number_of_profiles=50,
+            number_of_profiles=200,
             profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
             mandatory_role_words=get_role_titles(),
         )
