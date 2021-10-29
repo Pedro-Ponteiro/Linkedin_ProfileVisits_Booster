@@ -1,5 +1,7 @@
 # LinkedinBot
 
+
+
 Web browser automation to create more leads for your Linkedin profile!
 Use sparingly because overuse can result in bans.
 
@@ -23,3 +25,6 @@ Nevertheless, here is a quick setup</br>
 
 Results in one week:</br>
 ![image](https://user-images.githubusercontent.com/48108738/138418903-0bde6dc2-b84e-4762-adf4-a7f0b6181f2f.png)
+
+Preview:</br>
+https://youtu.be/IaPBkUgc-ls
