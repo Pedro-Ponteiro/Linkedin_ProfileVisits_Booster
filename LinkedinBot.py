@@ -1,6 +1,8 @@
 import json
+import logging
 import time
 import traceback
+import warnings
 from random import randint, random
 from typing import Dict, List, Tuple, Union
 
@@ -9,6 +11,10 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.remote_connection import LOGGER
+
+warnings.filterwarnings("ignore")
+LOGGER.setLevel(logging.WARNING)
 
 
 def get_profiles_not_to_visit() -> List[str]:
@@ -33,9 +39,11 @@ def get_webdriver() -> Chrome:
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--window-size=1280x1696")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
     wd = Chrome(options=chrome_options)
-    wd.maximize_window()
+    # wd.maximize_window()
 
     return wd
 
