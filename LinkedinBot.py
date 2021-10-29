@@ -1,19 +1,14 @@
-import getpass
-import logging
+import json
 import time
 import traceback
-import warnings
 from random import randint, random
-from typing import List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import chromedriver_autoinstaller
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.remote_connection import LOGGER
-
-warnings.filterwarnings("ignore")
-LOGGER.setLevel(logging.WARNING)
 
 
 def get_profiles_not_to_visit() -> List[str]:
@@ -35,36 +30,32 @@ def check_user_sign_out(wd: Chrome) -> None:
 def get_webdriver() -> Chrome:
 
     chromedriver_autoinstaller.install()
-    wd = Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    wd = Chrome(options=chrome_options)
     wd.maximize_window()
 
     return wd
 
 
-def get_role_titles() -> List[str]:
-    # TODO: customize this as you want
-    return [
-        "analista de dados",
-        "business intelligence",
-        "cientista de dados",
-        "data analyst",
-        "data analytics",
-        "data engineer",
-        "data science",
-        "data scientist",
-        "desenvolvedor",
-        "developer",
-        "engenheiro de dados",
-        "executive",
-        "full stack",
-        "full-stack",
-        "fullstack",
-        "head",
-        "HR",
-        "machine learning",
-        "python",
-        "statistician",
-    ]
+def get_json_file() -> Dict[str, Union[str, List[str]]]:
+    try:
+        jsonf = json.load(open("secrets.prod.json", "r"))
+    except FileNotFoundError:
+        print("Didnt locate file secrets.prod.json. Using secrets.example.json instead")
+        jsonf = json.load(open("secrets.example.json", "r"))
+
+    return jsonf
+
+
+def get_job_titles() -> List[str]:
+
+    jsonf = get_json_file()
+    job_titles = jsonf["job_titles"]
+
+    return job_titles
 
 
 def get_profiles_visited() -> List[str]:
@@ -75,8 +66,8 @@ def get_profiles_visited() -> List[str]:
 
 
 def get_credentials() -> Tuple[str, str]:
-    print("Credentials")
-    return input("Email: "), getpass.getpass("Password: ")
+    jsonf = get_json_file()
+    return jsonf["username"], jsonf["password"]
 
 
 class RecommendationPage:
@@ -97,7 +88,6 @@ class RecommendationPage:
             profiles_not_to_visit (List[str]): list of profiles not to visit
             mandatory_role_words (List[str]): will only visit profiles whose roles have one of these words
             excluded_roles (List[str]): will NOT visit profiles whose roles have one of these words
-
         Returns:
             List[str]: list of profiles collected to visit
         """
@@ -193,9 +183,9 @@ def main() -> None:
 
         LoginPage(wd).login(email, password)
         profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
-            number_of_profiles=200,
+            number_of_profiles=50,
             profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
-            mandatory_role_words=get_role_titles(),
+            mandatory_role_words=get_job_titles(),
         )
 
         profiles_visited_now: List[str] = []
