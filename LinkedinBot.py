@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import time
 import traceback
 import warnings
@@ -126,6 +127,7 @@ class RecommendationPage:
                 if len(profile_links) >= number_of_profiles:
                     print("Finished collecting profiles to visit")
                     break
+                self.wd.save_screenshot(os.getcwd() + os.sep + "debug.png")
                 print(f"Collected ({len(profile_links)}/{number_of_profiles})")
 
         return profile_links[:number_of_profiles]
