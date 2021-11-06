@@ -38,16 +38,12 @@ def get_webdriver() -> Chrome:
 
     chromedriver_autoinstaller.install()
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36"
-    chrome_options.add_argument(f"user-agent={user_agent}")
+    chrome_options.headless = True
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument('"--disable-dev-shm-usage"')
     chrome_options.add_argument("--window-size=1280x1696")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
     wd = Chrome(options=chrome_options)
-    # TODO: am i gonna use this?
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--start-maximized")
-    # wd.maximize_window()
 
     return wd
 
@@ -75,6 +71,13 @@ def get_profiles_visited() -> List[str]:
         linhas = arq.readlines()
 
     return [l.strip() for l in linhas]
+
+
+def get_n_profile_visits() -> int:
+    jsonf = get_json_file()
+    prof_visits = jsonf["profile_visits"]
+
+    return prof_visits
 
 
 def get_credentials() -> Tuple[str, str]:
@@ -196,7 +199,7 @@ def main() -> None:
 
         LoginPage(wd).login(email, password)
         profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
-            number_of_profiles=50,
+            number_of_profiles=get_n_profile_visits(),
             profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
             mandatory_role_words=get_job_titles(),
         )
