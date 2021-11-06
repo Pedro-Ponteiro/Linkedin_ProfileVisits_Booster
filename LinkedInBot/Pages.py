@@ -60,7 +60,7 @@ class RecommendationPage:
 
         return profile_links[:number_of_profiles]
 
-    def check_job_title(self, profile_element, mandatory_role_words) -> bool:
+    def check_job_title(self, profile_element, mandatory_role_words: List[str]) -> bool:
         try:
             role_title = profile_element.find_element_by_xpath(
                 "./span[contains(@class, 'occupation') and contains(@class, 'person-card')]"
@@ -111,7 +111,7 @@ class ProfilePage:
     def iterate_profiles_list(self, profiles_list: List[str]) -> str:
         for profile_link in profiles_list:
             print(
-                f"Visiting {profile_link} ({profiles_list.index(profile_link)}/{len(profiles_list) - 1})"
+                f"Visiting {profile_link} ({profiles_list.index(profile_link) + 1}/{len(profiles_list)})"
             )
             self.interact(profile_link)
             yield profile_link
