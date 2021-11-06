@@ -1,88 +1,13 @@
-import json
-import logging
 import os
 import time
-import traceback
-import warnings
 from random import randint, random
-from typing import Dict, List, Tuple, Union
+from typing import List
 
-import chromedriver_autoinstaller
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.remote_connection import LOGGER
 
-warnings.filterwarnings("ignore")
-LOGGER.setLevel(logging.WARNING)
-
-
-def get_profiles_not_to_visit() -> List[str]:
-    with open("should_not_visit.txt", "r") as f:
-        profiles_not_to_visit = f.readlines()
-    return [l.strip() for l in profiles_not_to_visit]
-
-
-def check_user_sign_out(wd: Chrome) -> None:
-    try:
-        wd.find_element_by_xpath(
-            "//a[@data-tracking-control-name='public_profile_nav-header-signin']"
-        )
-        raise Exception("User sign out identified")
-    except NoSuchElementException:
-        return
-
-
-def get_webdriver() -> Chrome:
-
-    chromedriver_autoinstaller.install()
-    chrome_options = Options()
-    chrome_options.headless = True
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument('"--disable-dev-shm-usage"')
-    chrome_options.add_argument("--window-size=1280x1696")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    wd = Chrome(options=chrome_options)
-
-    return wd
-
-
-def get_json_file() -> Dict[str, Union[str, List[str]]]:
-    try:
-        jsonf = json.load(open("secrets.prod.json", "r"))
-    except FileNotFoundError:
-        print("Didnt locate file secrets.prod.json. Using secrets.example.json instead")
-        jsonf = json.load(open("secrets.example.json", "r"))
-
-    return jsonf
-
-
-def get_job_titles() -> List[str]:
-
-    jsonf = get_json_file()
-    job_titles = jsonf["job_titles"]
-
-    return job_titles
-
-
-def get_profiles_visited() -> List[str]:
-    with open("profiles_visited.txt", "r") as arq:
-        linhas = arq.readlines()
-
-    return [l.strip() for l in linhas]
-
-
-def get_n_profile_visits() -> int:
-    jsonf = get_json_file()
-    prof_visits = jsonf["profile_visits"]
-
-    return prof_visits
-
-
-def get_credentials() -> Tuple[str, str]:
-    jsonf = get_json_file()
-    return jsonf["username"], jsonf["password"]
+from LinkedInBot import func_utils
 
 
 class RecommendationPage:
@@ -115,7 +40,7 @@ class RecommendationPage:
         profile_links = []
         step = 50
         while True:
-            check_user_sign_out(self.wd)
+            func_utils.check_user_sign_out(self.wd)
             cont += 1
             body.send_keys(Keys.END)
             time.sleep(randint(1, 2) * random() + 1)
@@ -152,7 +77,9 @@ class LoginPage:
     def __init__(self, wd: Chrome) -> None:
         self.wd = wd
         wd.get(
-            "https://www.linkedin.com/uas/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fmynetwork%2F&fromSignIn=true&trk=cold_join_sign_in"
+            "https://www.linkedin.com/uas/login?session_redirect="
+            + "https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fmynetwork%2F&fromSignIn="
+            + "true&trk=cold_join_sign_in"
         )
 
     def login(self, login: str, password: str) -> Chrome:
@@ -171,7 +98,7 @@ class ProfilePage:
         self.wd.switch_to.window(self.wd.window_handles[1])
         self.wd.get(profile_link)
 
-        check_user_sign_out(self.wd)
+        func_utils.check_user_sign_out(self.wd)
 
         body = self.wd.find_element_by_xpath("//body")
         for _ in range(0, 3):
@@ -188,36 +115,3 @@ class ProfilePage:
             )
             self.interact(profile_link)
             yield profile_link
-
-
-def main() -> None:
-
-    profiles_visited = get_profiles_visited()
-    profiles_not_to_visit = get_profiles_not_to_visit()
-    email, password = get_credentials()
-    with get_webdriver() as wd:
-
-        LoginPage(wd).login(email, password)
-        profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
-            number_of_profiles=get_n_profile_visits(),
-            profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
-            mandatory_role_words=get_job_titles(),
-        )
-
-        profiles_visited_now: List[str] = []
-        try:
-            for profile_visited in ProfilePage(wd).iterate_profiles_list(
-                profiles_to_visit
-            ):
-                profiles_visited_now.append(profile_visited)
-        except:
-            print(traceback.format_exc())
-        finally:
-            all_profiles_visited = profiles_visited + profiles_visited_now
-            with open("profiles_visited.txt", "w") as f:
-                f.writelines("\n".join(all_profiles_visited))
-            print("Exiting...")
-
-
-if __name__ == "__main__":
-    main()
