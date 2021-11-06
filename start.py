@@ -22,7 +22,9 @@ def main() -> None:
         LoginPage(wd).login(email, password)
         profiles_to_visit = RecommendationPage(wd).collect_profiles_to_visit(
             number_of_profiles=func_utils.get_n_profile_visits(),
-            profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
+            profiles_not_to_visit=set(
+                profiles_not_to_visit + profiles_visited
+            ),
             mandatory_role_words=func_utils.get_job_titles(),
         )
 
@@ -32,7 +34,7 @@ def main() -> None:
                 profiles_to_visit
             ):
                 profiles_visited_now.append(profile_visited)
-        except:
+        except BaseException:
             print(traceback.format_exc())
         finally:
             all_profiles_visited = profiles_visited + profiles_visited_now

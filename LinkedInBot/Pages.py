@@ -26,8 +26,10 @@ class RecommendationPage:
         Args:
             number_of_profiles (int): number of profiles to visit
             profiles_not_to_visit (List[str]): list of profiles not to visit
-            mandatory_role_words (List[str]): will only visit profiles whose roles have one of these words
-            excluded_roles (List[str]): will NOT visit profiles whose roles have one of these words
+            mandatory_role_words (List[str]): will only visit profiles whose
+            roles have one of these words
+            excluded_roles (List[str]): will NOT visit profiles whose roles
+            have one of these words
         Returns:
             List[str]: list of profiles collected to visit
         """
@@ -46,12 +48,21 @@ class RecommendationPage:
             time.sleep(randint(1, 2) * random() + 1)
             if cont == 1 or cont % step == 0:
                 profile_links.clear()
-                profiles_elements = self.wd.find_elements_by_xpath(profile_elem_xpath)
+                profiles_elements = self.wd.find_elements_by_xpath(
+                    profile_elem_xpath
+                )
                 print("All profiles found: ", len(profiles_elements))
                 for prof_elem in profiles_elements:
-                    if prof_elem.get_attribute("href") not in profiles_not_to_visit:
-                        if self.check_job_title(prof_elem, mandatory_role_words):
-                            profile_links.append(prof_elem.get_attribute("href"))
+                    if (
+                        prof_elem.get_attribute("href")
+                        not in profiles_not_to_visit
+                    ):
+                        if self.check_job_title(
+                            prof_elem, mandatory_role_words
+                        ):
+                            profile_links.append(
+                                prof_elem.get_attribute("href")
+                            )
                 if len(profile_links) >= number_of_profiles:
                     print("Finished collecting profiles to visit")
                     break
@@ -60,10 +71,13 @@ class RecommendationPage:
 
         return profile_links[:number_of_profiles]
 
-    def check_job_title(self, profile_element, mandatory_role_words: List[str]) -> bool:
+    def check_job_title(
+        self, profile_element, mandatory_role_words: List[str]
+    ) -> bool:
         try:
             role_title = profile_element.find_element_by_xpath(
-                "./span[contains(@class, 'occupation') and contains(@class, 'person-card')]"
+                "./span[contains(@class, 'occupation') and "
+                + "contains(@class, 'person-card')]"
             ).text.lower()
         except NoSuchElementException:
             return False
@@ -83,8 +97,12 @@ class LoginPage:
         )
 
     def login(self, login: str, password: str) -> Chrome:
-        self.wd.find_element_by_xpath("//input[@id='username']").send_keys(login)
-        password_inp_elem = self.wd.find_element_by_xpath("//input[@id='password']")
+        self.wd.find_element_by_xpath("//input[@id='username']").send_keys(
+            login
+        )
+        password_inp_elem = self.wd.find_element_by_xpath(
+            "//input[@id='password']"
+        )
         password_inp_elem.send_keys(password)
         password_inp_elem.send_keys(Keys.ENTER)
 
@@ -111,7 +129,9 @@ class ProfilePage:
     def iterate_profiles_list(self, profiles_list: List[str]) -> str:
         for profile_link in profiles_list:
             print(
-                f"Visiting {profile_link} ({profiles_list.index(profile_link) + 1}/{len(profiles_list)})"
+                f"Visiting {profile_link} "
+                + f"({profiles_list.index(profile_link) + 1}/"
+                + f"{len(profiles_list)})"
             )
             self.interact(profile_link)
             yield profile_link

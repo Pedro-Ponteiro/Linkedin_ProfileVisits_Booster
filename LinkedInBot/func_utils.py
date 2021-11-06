@@ -10,7 +10,8 @@ from selenium.webdriver import Chrome, ChromeOptions
 def check_user_sign_out(wd: Chrome) -> None:
     try:
         wd.find_element_by_xpath(
-            "//a[@data-tracking-control-name='public_profile_nav-header-signin']"
+            "//a[@data-tracking-control-name="
+            + "'public_profile_nav-header-signin']"
         )
         raise Exception("User sign out identified")
     except NoSuchElementException:
@@ -25,7 +26,9 @@ def get_webdriver() -> Chrome:
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument('"--disable-dev-shm-usage"')
     chrome_options.add_argument("--window-size=1280x1696")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    chrome_options.add_experimental_option(
+        "excludeSwitches", ["enable-logging"]
+    )
     wd = Chrome(options=chrome_options)
 
     return wd
@@ -35,20 +38,23 @@ def get_profiles_visited() -> List[str]:
     with open(os.path.join(".", "data", "profiles_visited.txt"), "r") as arq:
         linhas = arq.readlines()
 
-    return [l.strip() for l in linhas]
+    return [line.strip() for line in linhas]
 
 
 def get_profiles_not_to_visit() -> List[str]:
     with open(os.path.join(".", "data", "should_not_visit.txt"), "r") as f:
         profiles_not_to_visit = f.readlines()
-    return [l.strip() for l in profiles_not_to_visit]
+    return [line.strip() for line in profiles_not_to_visit]
 
 
 def get_json_file() -> Dict[str, Union[str, List[str]]]:
     try:
         jsonf = json.load(open("secrets.prod.json", "r"))
     except FileNotFoundError:
-        print("Didnt locate file secrets.prod.json. Using secrets.example.json instead")
+        print(
+            "Didnt locate file secrets.prod.json. "
+            + "Using secrets.example.json instead"
+        )
         jsonf = json.load(open("secrets.example.json", "r"))
 
     return jsonf
