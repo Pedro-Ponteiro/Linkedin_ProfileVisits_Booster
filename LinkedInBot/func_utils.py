@@ -1,15 +1,10 @@
 import json
+import os
 from typing import Dict, List, Tuple, Union
 
 import chromedriver_autoinstaller
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome, ChromeOptions
-
-
-def get_profiles_not_to_visit() -> List[str]:
-    with open("should_not_visit.txt", "r") as f:
-        profiles_not_to_visit = f.readlines()
-    return [l.strip() for l in profiles_not_to_visit]
 
 
 def check_user_sign_out(wd: Chrome) -> None:
@@ -36,6 +31,19 @@ def get_webdriver() -> Chrome:
     return wd
 
 
+def get_profiles_visited() -> List[str]:
+    with open(os.path.join(".", "data", "profiles_visited.txt"), "r") as arq:
+        linhas = arq.readlines()
+
+    return [l.strip() for l in linhas]
+
+
+def get_profiles_not_to_visit() -> List[str]:
+    with open(os.path.join(".", "data", "should_not_visit.txt"), "r") as f:
+        profiles_not_to_visit = f.readlines()
+    return [l.strip() for l in profiles_not_to_visit]
+
+
 def get_json_file() -> Dict[str, Union[str, List[str]]]:
     try:
         jsonf = json.load(open("secrets.prod.json", "r"))
@@ -52,13 +60,6 @@ def get_job_titles() -> List[str]:
     job_titles = jsonf["job_titles"]
 
     return job_titles
-
-
-def get_profiles_visited() -> List[str]:
-    with open("profiles_visited.txt", "r") as arq:
-        linhas = arq.readlines()
-
-    return [l.strip() for l in linhas]
 
 
 def get_n_profile_visits() -> int:
