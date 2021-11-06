@@ -1,0 +1,4 @@
+venv
+debug.png
+secrets.prod.json
+__pycache__
