@@ -1,2 +1,4 @@
 venv
 secrets.prod.json
+__pycache__
+debug.png
