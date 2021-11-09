@@ -1,30 +1,49 @@
-# LinkedinBot
+# LinkedInBot
+
+Web browser automation to create more leads for your Linkedin profile! Use sparingly because overuse can result in bans.
+
+## Installation with Docker
+
+1. Requirements: </br>
+Docker 20.10.10
+
+2. Clone repo and build image
+```bash
+git clone https://github.com/Pedro-Ponteiro/LinkedinBot.git
+cd LinkedinBot 
+docker build -t pedroponteiro/linkedinbot:0.1 .
+```
+
+3. Create a secrets.prod.json file inside "container_data" folder (see secrets.example.json)
+
+```python
+{
+    "username": "your_username@email.com",
+    "password": "your_password",
+    "job_titles": [
+        "job_title_of_people_i_want_to_connect",
+        "ceo"
+    ],
+    "profile_visits": 50
+}
+```
+
+## Usage
+
+```python
+docker run -it --rm -v ${PWD}/container_data:/app/container_data --shm-size="2g" pedroponteiro/linkedinbot:0.1 python start.py
+
+```
 
 
+## Debugging
+After counting the number of profiles found at the "My Network" Page, the driver saves a screenshot at "container_data" which is bind mounted (meaning you can see the image in the host computer)
 
-Web browser automation to create more leads for your Linkedin profile!
-Use sparingly because overuse can result in bans.
 
-Must have installed:</br>
--> Python</br>
--> requirements.txt</br>
--> Google Chrome</br>
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-To use the app, leave me a message and I will be more than happy to teach you how to use it.</br>
+Please make sure to update pre-commit as appropriate.
 
-Nevertheless, here is a quick setup</br>
-1 -> install python</br>
-2 -> install Chrome</br>
-3 -> clone repo</br>
-4 -> use these commands inside the repo folder:</br>
-4.1 -> py -m venv venv</br>
-4.2 -> venv/Scripts/activate</br>
-4.3 -> pip install -r requirements.txt</br>
-5 -> customize function "get_role_titles" with your preferences</br>
-6 -> run the script with "py LinkedinBot.py"</br>
-
-Results in one week:</br>
-![image](https://user-images.githubusercontent.com/48108738/138418903-0bde6dc2-b84e-4762-adf4-a7f0b6181f2f.png)
-
-Preview:</br>
-https://youtu.be/IaPBkUgc-ls
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
