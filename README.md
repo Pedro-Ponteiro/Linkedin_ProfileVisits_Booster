@@ -5,12 +5,13 @@ Web browser automation to create more leads for your Linkedin profile! Use spari
 ## Installation with Docker
 
 1. Requirements: </br>
-Docker 20.10.10
+   Docker 20.10.10
 
 2. Clone repo and build image
+
 ```bash
 git clone https://github.com/Pedro-Ponteiro/LinkedinBot.git
-cd LinkedinBot 
+cd LinkedinBot
 docker build -t pedroponteiro/linkedinbot:0.1 .
 ```
 
@@ -32,18 +33,22 @@ docker build -t pedroponteiro/linkedinbot:0.1 .
 
 ```python
 docker run -it --rm -v ${PWD}/container_data:/app/container_data --shm-size="2g" pedroponteiro/linkedinbot:0.1 python start.py
-
 ```
 
-
 ## Debugging
+
 After counting the number of profiles found at the "My Network" Page, the driver saves a screenshot at "container_data" which is bind mounted (meaning you can see the image in the host computer)
 
-
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update pre-commit as appropriate.
 
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Results after one week
+
+![image](https://user-images.githubusercontent.com/48108738/138418903-0bde6dc2-b84e-4762-adf4-a7f0b6181f2f.png)
