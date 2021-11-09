@@ -31,3 +31,4 @@ repos:
     rev: v2.8.0
     hooks:
       - id: hadolint
+        args: ["--ignore=DL4006", "--ignore=DL3015", "--ignore=DL3008"]
