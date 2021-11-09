@@ -1,4 +1,6 @@
 venv
 debug.png
-secrets.prod.json
+*/secrets.prod.json
 __pycache__
+README.md
+LICENSE
