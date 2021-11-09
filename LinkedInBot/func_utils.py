@@ -89,4 +89,5 @@ def get_n_profile_visits() -> int:
 
 def get_credentials() -> Tuple[str, str]:
     jsonf = get_json_file()
+    print(f"Logging user {jsonf['username']}")
     return jsonf["username"], jsonf["password"]
