@@ -35,27 +35,39 @@ def get_webdriver() -> Chrome:
 
 
 def get_profiles_visited() -> List[str]:
-    with open(os.path.join(".", "data", "profiles_visited.txt"), "r") as arq:
+    with open(
+        os.path.join(".", "container_data", "profiles_visited.txt"), "r"
+    ) as arq:
         linhas = arq.readlines()
 
     return [line.strip() for line in linhas]
 
 
 def get_profiles_not_to_visit() -> List[str]:
-    with open(os.path.join(".", "data", "should_not_visit.txt"), "r") as f:
+    with open(
+        os.path.join(".", "container_data", "should_not_visit.txt"), "r"
+    ) as f:
         profiles_not_to_visit = f.readlines()
     return [line.strip() for line in profiles_not_to_visit]
 
 
 def get_json_file() -> Dict[str, Union[str, List[str]]]:
+    json_base_path = os.path.join(".", "container_data")
     try:
-        jsonf = json.load(open("secrets.prod.json", "r"))
+        jsonf = json.load(
+            open(os.path.join(json_base_path, "secrets.prod.json"), "r")
+        )
     except FileNotFoundError:
         print(
             "Didnt locate file secrets.prod.json. "
             + "Using secrets.example.json instead"
         )
-        jsonf = json.load(open("secrets.example.json", "r"))
+        jsonf = json.load(
+            open(
+                os.path.join(json_base_path, "secrets.example.json"),
+                "r",
+            )
+        )
 
     return jsonf
 
