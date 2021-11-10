@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  code-quality-enforcer:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,16 +35,32 @@ jobs:
       - name: python-flake8 Enforcer
         uses: julianwachholz/flake8-action@v2.0.2
 
-      - name: Pytype Python Checker Enforcer
-        uses: theahura/pytype-action@v1.2
+      #- name: Pytype Python Checker Enforcer
+      # uses: theahura/pytype-action@v1.2
 
       - name: Dockerfile Validator Enforcer
         uses: ghe-actions/dockerfile-validator@v1
-
-      - name: docstr-coverage Enforcer
-        uses: skazazes-work/docstr-coverage-action@v1.4
 
       - name: Xenon Enforcer
         run: |
           python${{ matrix.python-version }} -m pip install xenon
           xenon --ignore=venv --max-absolute=B --max-average=A .
+
+      - name: Python Code Quality and Lint
+        # You m'ay pin to the exact commit or the version.
+        # uses: ricardochaves/python-lint@32032eca67291cd71f88d79e61bc4b904ee03265
+        uses: ricardochaves/python-lint@v1.3.0
+        with:
+          use-pylint: false
+          use-pycodestyle: false
+          use-flake8: true
+          use-black: true
+          use-mypy: true
+          use-isort: true
+          # Extra options: black --check $(extra-black-options) $(python-root-list)
+          # extra-black-options: --line-length=79
+          # Extra options: mypy $(extra-mypy-options) $(python-root-list)
+          # extra-mypy-options: # optional, default is
+
+      - name: docstr-coverage Enforcer
+        uses: skazazes-work/docstr-coverage-action@v1.4
