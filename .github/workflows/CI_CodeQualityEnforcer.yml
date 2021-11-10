@@ -1,0 +1,50 @@
+name: CI_CodeQualityEnforcer
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Python Blacken Enforcer
+        uses: piotrpawlaczek/python-blacken@v20.8b1
+        with:
+          line-length: 79
+
+      - name: python-isort Enforcer
+        uses: isort/isort-action@v0.1.0
+
+      - name: python-flake8 Enforcer
+        uses: julianwachholz/flake8-action@v2.0.2
+
+      - name: Pytype Python Checker Enforcer
+        uses: theahura/pytype-action@v1.2
+
+      - name: Dockerfile Validator Enforcer
+        uses: ghe-actions/dockerfile-validator@v1
+
+      - name: docstr-coverage Enforcer
+        uses: skazazes-work/docstr-coverage-action@v1.4
+
+      - name: Xenon Enforcer
+        run: |
+          python${{ matrix.python-version }} -m pip install xenon
+          xenon --ignore=venv --max-absolute=B --max-average=A .
