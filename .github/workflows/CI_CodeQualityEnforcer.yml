@@ -58,7 +58,7 @@ jobs:
           use-mypy: true
           use-isort: true
           # Extra options: black --check $(extra-black-options) $(python-root-list)
-          # extra-black-options: --line-length=79
+          extra-black-options: --line-length=79
           # Extra options: mypy $(extra-mypy-options) $(python-root-list)
           # extra-mypy-options: # optional, default is
 
