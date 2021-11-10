@@ -35,17 +35,20 @@ jobs:
           python${{ matrix.python-version }} -m pip install xenon
           xenon --ignore=venv --max-absolute=B --max-average=A .
 
+      - name: Python Blacken Enforcer
+        uses: piotrpawlaczek/python-blacken@v20.8b1
+        with:
+          line-length: 79
+
       - name: Python Code Quality and Lint
         uses: ricardochaves/python-lint@v1.3.0
         with:
           use-pylint: false
           use-pycodestyle: false
+          use-black: false
           use-flake8: true
-          use-black: true
           use-mypy: true
           use-isort: true
-          # Extra options: black --check $(extra-black-options) $(python-root-list)
-          extra-black-options: --line-length=79
           # Extra options: mypy $(extra-mypy-options) $(python-root-list)
           # extra-mypy-options: # optional, default is
 
