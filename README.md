@@ -32,7 +32,7 @@ docker build -t pedroponteiro/linkedinbot:0.1 .
 ## Usage
 
 ```python
-docker run -it --rm -v ${PWD}/container_data:/app/container_data --shm-size="2g" pedroponteiro/linkedinbot:0.1 python start.py
+docker run -it --rm -v ${PWD}/container_data:/app/container_data --shm-size="2g" pedroponteiro/linkedinbot:0.1 python linkedinbot/start.py
 ```
 
 ## Debugging
