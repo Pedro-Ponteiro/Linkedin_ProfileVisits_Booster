@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 import secrets
 import time
 from typing import Dict
@@ -11,6 +11,8 @@ import chromedriver_autoinstaller
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
+
+CONTAINER_DATA_FOLDER = Path(__file__).parent.parent / "container_data"
 
 
 def check_user_sign_out(wd: Chrome) -> None:
@@ -55,7 +57,7 @@ def get_profiles_visited() -> List[str]:
     Returns:
         List[str]: list of profile links which have been visited
     """
-    with open(os.path.join("..", "container_data", "profiles_visited.txt"), "r") as arq:
+    with open(CONTAINER_DATA_FOLDER / "profiles_visited.txt", "r") as arq:
         linhas = arq.readlines()
 
     return [line.strip() for line in linhas]
@@ -67,7 +69,7 @@ def get_profiles_blacklist() -> List[str]:
     Returns:
         List[str]: profiles blacklist
     """
-    with open(os.path.join("..", "container_data", "should_not_visit.txt"), "r") as f:
+    with open(CONTAINER_DATA_FOLDER / "should_not_visit.txt", "r") as f:
         profiles_not_to_visit = f.readlines()
     return [line.strip() for line in profiles_not_to_visit]
 
@@ -78,16 +80,15 @@ def get_json_file() -> Dict[str, Union[str, List[str]]]:
     Returns:
         Dict[str, Union[str, List[str]]]: dictionary of secrets data
     """
-    json_base_path = os.path.join("..", "container_data")
     try:
-        with open(os.path.join(json_base_path, "secrets.prod.json"), "r") as f:
+        with open(CONTAINER_DATA_FOLDER / "secrets.prod.json", "r") as f:
             return json.load(f)
     except FileNotFoundError:
         print(
             "Didnt locate file secrets.prod.json. "
             + "Using secrets.example.json instead"
         )
-        with open(os.path.join(json_base_path, "secrets.example.json"), "r") as f:
+        with open(CONTAINER_DATA_FOLDER / "secrets.example.json", "r") as f:
             return json.load(f)
 
 
@@ -135,4 +136,9 @@ def save_screenshot(wd: Chrome) -> None:
     Args:
         wd (Chrome): webdriver
     """
-    wd.save_screenshot(os.path.join(".", "container_data", "debug.png"))
+    wd.save_screenshot(CONTAINER_DATA_FOLDER / "debug.png")
+
+
+def save_profiles_visited(profiles_visited: List[str]) -> None:
+    with open(CONTAINER_DATA_FOLDER / "profiles_visited.txt", "w") as f:
+        f.writelines("\n".join(profiles_visited))

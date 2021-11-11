@@ -35,8 +35,9 @@ def main() -> None:
             print(traceback.format_exc())
         finally:
             all_profiles_visited = profiles_visited + profiles_visited_now
-            with open("profiles_visited.txt", "w") as f:
-                f.writelines("\n".join(all_profiles_visited))
+
+            func_utils.save_profiles_visited(all_profiles_visited)
+
             print("Exiting...")
 
 
