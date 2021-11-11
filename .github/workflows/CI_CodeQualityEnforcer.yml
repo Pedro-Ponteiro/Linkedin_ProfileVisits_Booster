@@ -30,9 +30,9 @@ jobs:
       - name: Flake8 Enforcer
         run: |
           python${{ matrix.python-version }} -m pip install wheel \
-          flake8 cohesion flake8-requirements flake8-annotations flake8-docstrings \
+          flake8 cohesion flake8-annotations flake8-docstrings \
           flake8-return flake8-bugbear pep8-naming flake8-builtins \
           flake8-isort flake8-comprehensions flake8-simplify \
           flake8-bandit flake8-black flake8-functions flake8-variables-names pandas-vet \
-          flake8-expression-complexity flake8-cognitive-complexity flake8-import-order
-          flake8 --exclude=venv/* --ignore=ANN101,W503 --max-complexity=10 --max-line-length=88 .
+          flake8-expression-complexity flake8-cognitive-complexity
+          flake8 --exclude=venv/* --ignore=ANN101,W503,D100,D104 --max-complexity=10 --max-line-length=88 .
