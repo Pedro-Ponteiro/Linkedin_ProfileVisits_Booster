@@ -1,16 +1,12 @@
 import json
-from pathlib import Path
 import secrets
 import time
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
+from pathlib import Path
+from typing import Dict, List, Tuple, Union
 
 import chromedriver_autoinstaller
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Chrome
-from selenium.webdriver import ChromeOptions
+from selenium.webdriver import Chrome, ChromeOptions
 
 CONTAINER_DATA_FOLDER = Path(__file__).parent.parent / "container_data"
 
