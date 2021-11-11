@@ -136,5 +136,10 @@ def save_screenshot(wd: Chrome) -> None:
 
 
 def save_profiles_visited(profiles_visited: List[str]) -> None:
+    """Save profiles visited at container_data folder.
+
+    Args:
+        profiles_visited (List[str]): list of links that were visited
+    """
     with open(CONTAINER_DATA_FOLDER / "profiles_visited.txt", "w") as f:
         f.writelines("\n".join(profiles_visited))
