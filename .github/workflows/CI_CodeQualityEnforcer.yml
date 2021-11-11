@@ -24,33 +24,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      #- name: Pytype Python Checker Enforcer
-      # uses: theahura/pytype-action@v1.2
-
       - name: Dockerfile Validator Enforcer
         uses: ghe-actions/dockerfile-validator@v1
 
-      - name: Xenon Enforcer
+      - name: Flake8 Enforcer
         run: |
-          python${{ matrix.python-version }} -m pip install xenon
-          xenon --ignore=venv --max-absolute=B --max-average=A .
-
-      - name: Python Blacken Enforcer
-        uses: piotrpawlaczek/python-blacken@v20.8b1
-        with:
-          line-length: 79
-
-      - name: Python Code Quality and Lint
-        uses: ricardochaves/python-lint@v1.3.0
-        with:
-          use-pylint: false
-          use-pycodestyle: false
-          use-black: false
-          use-flake8: true
-          use-mypy: true
-          use-isort: true
-          # Extra options: mypy $(extra-mypy-options) $(python-root-list)
-          # extra-mypy-options: # optional, default is
-
-      - name: docstr-coverage Enforcer
-        uses: skazazes-work/docstr-coverage-action@v1.4
+          python${{ matrix.python-version }} -m pip install wheel \
+          flake8 cohesion flake8-requirements flake8-annotations flake8-docstrings \
+          flake8-return flake8-bugbear pep8-naming flake8-builtins \
+          flake8-isort flake8-comprehensions flake8-simplify \
+          flake8-bandit flake8-black flake8-functions flake8-variables-names pandas-vet \
+          flake8-expression-complexity flake8-cognitive-complexity flake8-import-order
+          flake8 --exclude=venv/* --ignore=ANN101,W503 --max-complexity=10 --max-line-length=88 .
