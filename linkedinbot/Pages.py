@@ -24,6 +24,7 @@ class RecommendationPage:
         number_of_profiles: int,
         profiles_not_to_visit: List[str],
         mandatory_role_words: List[str],
+        role_blacklist: List[str],
     ) -> List[str]:
         """Collect profiles for visiting later.
 
@@ -52,7 +53,10 @@ class RecommendationPage:
             if cont == 1 or cont % step == 0:
 
                 profile_links = self.start_collecting(
-                    profiles_not_to_visit, mandatory_role_words, profile_elem_xpath
+                    profiles_not_to_visit,
+                    mandatory_role_words,
+                    role_blacklist,
+                    profile_elem_xpath,
                 )
 
                 if len(profile_links) >= number_of_profiles:
@@ -67,6 +71,7 @@ class RecommendationPage:
         self,
         profiles_not_to_visit: List[str],
         mandatory_role_words: List[str],
+        role_blacklist: List[str],
         profile_elem_xpath: str,
     ) -> List[str]:
         """Collect profiles that appeared at My Network Page.
@@ -87,14 +92,17 @@ class RecommendationPage:
             if prof_elem.get_attribute(
                 "href"
             ) not in profiles_not_to_visit and self.check_job_title(
-                prof_elem, mandatory_role_words
+                prof_elem, mandatory_role_words, role_blacklist
             ):
                 profile_links_collected.append(prof_elem.get_attribute("href"))
 
         return profile_links_collected
 
     def check_job_title(
-        self, profile_element: WebElement, mandatory_role_words: List[str]
+        self,
+        profile_element: WebElement,
+        mandatory_role_words: List[str],
+        role_blacklist: List[str],
     ) -> bool:
         """Check if job title of the profile is present inside the mandatory list.
 
@@ -113,7 +121,9 @@ class RecommendationPage:
         except NoSuchElementException:
             return False
 
-        if any([w.lower() in role_title for w in mandatory_role_words]):
+        if any(w in role_title for w in mandatory_role_words) and all(
+            w not in role_title for w in role_blacklist
+        ):
             return True
         return False
 

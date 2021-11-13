@@ -23,6 +23,7 @@ def main() -> None:
             number_of_profiles=func_utils.get_n_profile_visits(),
             profiles_not_to_visit=set(profiles_not_to_visit + profiles_visited),
             mandatory_role_words=func_utils.get_job_titles(),
+            role_blacklist=func_utils.get_headlines_blacklist(),
         )
 
         profiles_visited_now: List[str] = []
