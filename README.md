@@ -19,13 +19,14 @@ docker build -t pedroponteiro/linkedinbot:0.1 .
 
 ```python
 {
-    "username": "your_username@email.com",
-    "password": "your_password",
+    "username": "your_username@email.com",  # your username
+    "password": "your_password",  # your password
     "job_titles": [
         "job_title_of_people_i_want_to_connect",
         "ceo"
     ],
-    "profile_visits": 50
+    "profile_visits": 50, # number of profiles to visit
+    "connect_with": 25 # number of profiles to connect
 }
 ```
 
@@ -43,7 +44,7 @@ After counting the number of profiles found at the "My Network" Page, the driver
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update pre-commit as appropriate.
+For Forks, please don't commit directly to "main" branch.
 
 ## License
 
