@@ -1,12 +1,11 @@
 import traceback
 from typing import List
 
+import func_utils
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebElement
-
-import func_utils
 
 
 class RecommendationPage:
