@@ -210,6 +210,8 @@ class ProfilePage:
         func_utils.sleep_for_random_time()
         self.wd.find_element_by_xpath("//button[@aria-label='Send now']").click()
         func_utils.sleep_for_random_time()
+        func_utils.sleep_for_random_time()
+        func_utils.sleep_for_random_time()
 
     def iterate_profiles_list(
         self, profiles_to_visit: List[str], profiles_to_connect: List[str]
