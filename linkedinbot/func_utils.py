@@ -121,6 +121,15 @@ def get_n_profile_visits() -> int:
     return jsonf["profile_visits"]
 
 
+def get_n_connects() -> int:
+    """Get number of profiles to connect with
+
+    Returns:
+        int: number of profiles that we will connect.
+    """
+    return get_json_file()["connect_with"]
+
+
 def get_credentials() -> Tuple[str, str]:
     """Get credentials (username and password).
 
@@ -143,7 +152,7 @@ def save_screenshot(wd: Chrome) -> None:
     Args:
         wd (Chrome): webdriver
     """
-    wd.save_screenshot(CONTAINER_DATA_FOLDER / "debug.png")
+    wd.save_screenshot(str(CONTAINER_DATA_FOLDER / "debug.png"))
 
 
 def save_profiles_visited(profiles_visited: List[str]) -> None:

@@ -1,4 +1,5 @@
 import logging
+import random
 import traceback
 import warnings
 from typing import List
@@ -26,10 +27,14 @@ def main() -> None:
             role_blacklist=func_utils.get_headlines_blacklist(),
         )
 
+        profiles_to_connect = random.sample(
+            profiles_to_visit, k=func_utils.get_n_connects()
+        )
+
         profiles_visited_now: List[str] = []
         try:
             for profile_visited in Pages.ProfilePage(wd).iterate_profiles_list(
-                profiles_to_visit
+                profiles_to_visit, profiles_to_connect
             ):
                 profiles_visited_now.append(profile_visited)
         except BaseException:

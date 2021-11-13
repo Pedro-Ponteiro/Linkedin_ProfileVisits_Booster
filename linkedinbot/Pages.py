@@ -1,3 +1,4 @@
+import traceback
 from typing import List
 
 import func_utils
@@ -26,6 +27,7 @@ class RecommendationPage:
         mandatory_role_words: List[str],
         role_blacklist: List[str],
     ) -> List[str]:
+        # TODO: explain whats happening in a better way
         """Collect profiles for visiting later.
 
         Args:
@@ -44,7 +46,7 @@ class RecommendationPage:
 
         cont = 0
         profile_links = []
-        step = 50
+        step = 25
         while True:
             func_utils.check_user_sign_out(self.wd)
             cont += 1
@@ -171,7 +173,7 @@ class ProfilePage:
         """
         self.wd = wd
 
-    def interact(self, profile_link: str) -> None:
+    def interact(self, profile_link: str, connect: bool) -> None:
         """Interact a little bit with the profile.
 
         Args:
@@ -188,10 +190,29 @@ class ProfilePage:
             body.send_keys(Keys.PAGE_DOWN)
             func_utils.sleep_for_random_time()
 
+        if connect:
+            print("Connecting")
+            body.send_keys(Keys.HOME)
+            try:
+                self.connect_with_profile()
+            except BaseException:
+                print(f"Error: {traceback.format_exc()}")
+
         self.wd.close()
         self.wd.switch_to.window(self.wd.window_handles[0])
 
-    def iterate_profiles_list(self, profiles_list: List[str]) -> str:
+    def connect_with_profile(self) -> None:
+        func_utils.sleep_for_random_time()
+        self.wd.find_element_by_xpath(
+            "//div[@class='pvs-profile-actions ']/button[./span/text()='Connect']"
+        ).click()
+        func_utils.sleep_for_random_time()
+        self.wd.find_element_by_xpath("//button[@aria-label='Send now']").click()
+        func_utils.sleep_for_random_time()
+
+    def iterate_profiles_list(
+        self, profiles_to_visit: List[str], profiles_to_connect: List[str]
+    ) -> str:
         """Wrap the method interact (use it for each profile inside profile_list).
 
         Args:
@@ -200,11 +221,12 @@ class ProfilePage:
         Yields:
             Iterator[str]: profile link that has been visited
         """
-        for profile_link in profiles_list:
+        for profile_link in profiles_to_visit:
             print(
                 f"Visiting {profile_link} "
-                + f"({profiles_list.index(profile_link) + 1}/"
-                + f"{len(profiles_list)})"
+                + f"({profiles_to_visit.index(profile_link) + 1}/"
+                + f"{len(profiles_to_visit)})"
             )
-            self.interact(profile_link)
+            should_connect = profile_link in profiles_to_connect
+            self.interact(profile_link, connect=should_connect)
             yield profile_link
