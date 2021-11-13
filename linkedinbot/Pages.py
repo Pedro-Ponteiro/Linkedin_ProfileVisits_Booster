@@ -1,11 +1,12 @@
 import traceback
 from typing import List
 
-import func_utils
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebElement
+
+import func_utils
 
 
 class RecommendationPage:
@@ -202,6 +203,7 @@ class ProfilePage:
         self.wd.switch_to.window(self.wd.window_handles[0])
 
     def connect_with_profile(self) -> None:
+        """Connect with profile that is being viewed."""
         func_utils.sleep_for_random_time()
         self.wd.find_element_by_xpath(
             "//div[@class='pvs-profile-actions ']/button[./span/text()='Connect']"

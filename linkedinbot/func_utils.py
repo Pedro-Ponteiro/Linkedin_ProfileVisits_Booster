@@ -122,7 +122,7 @@ def get_n_profile_visits() -> int:
 
 
 def get_n_connects() -> int:
-    """Get number of profiles to connect with
+    """Get number of profiles to connect with.
 
     Returns:
         int: number of profiles that we will connect.
