@@ -96,7 +96,18 @@ def get_job_titles() -> List[str]:
     """
     jsonf = get_json_file()
 
-    return jsonf["job_titles"]
+    return [headline.lower() for headline in jsonf["headline_must_contain"]]
+
+
+def get_headlines_blacklist() -> List[str]:
+    """Get job titles of people who should NOT be visited.
+
+    Returns:
+        List[str]: list of job titles
+    """
+    jsonf = get_json_file()
+
+    return [headline.lower() for headline in jsonf["headline_blacklist"]]
 
 
 def get_n_profile_visits() -> int:
