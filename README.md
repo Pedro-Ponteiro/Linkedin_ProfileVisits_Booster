@@ -15,7 +15,11 @@ cd LinkedinBot
 docker build -t pedroponteiro/linkedinbot:0.1 .
 ```
 
-3. Create a secrets.prod.json file inside "container_data" folder (see secrets.example.json)
+## Customization
+
+1. Create a secrets.prod.json file inside "container_data" folder (see secrets.example.json)
+
+2. You can specify people you don't want to visit in should_not_visit.txt (one linkedin link per line)
 
 
 ## Usage
