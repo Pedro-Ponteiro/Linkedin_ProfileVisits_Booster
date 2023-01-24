@@ -17,18 +17,6 @@ docker build -t pedroponteiro/linkedinbot:0.1 .
 
 3. Create a secrets.prod.json file inside "container_data" folder (see secrets.example.json)
 
-```python
-{
-    "username": "your_username@email.com",  # your username
-    "password": "your_password",  # your password
-    "job_titles": [
-        "job_title_of_people_i_want_to_connect",
-        "ceo"
-    ],
-    "profile_visits": 50, # number of profiles to visit
-    "connect_with": 25 # number of profiles to connect
-}
-```
 
 ## Usage
 
