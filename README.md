@@ -5,12 +5,12 @@ Web browser automation to create more leads for your Linkedin profile! Use spari
 ## Installation with Docker
 
 1. Requirements: </br>
-   Docker 20.10.10
+   Docker >= 20.10
 
 2. Clone repo and build image
 
 ```bash
-git clone https://github.com/Pedro-Ponteiro/LinkedinBot.git
+git clone https://github.com/Pedro-Ponteiro/Linkedin_ProfileVisits_Booster.git
 cd LinkedinBot
 docker build -t pedroponteiro/linkedinbot:0.1 .
 ```
