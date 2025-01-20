@@ -34,5 +34,5 @@ trio==0.19.0
 trio-websocket==0.9.2
 typing-extensions==3.10.0.2
 urllib3==1.26.7
-virtualenv==20.10.0
+virtualenv==20.26.6
 wsproto==1.0.0
