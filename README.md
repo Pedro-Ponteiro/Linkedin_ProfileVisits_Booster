@@ -1,6 +1,8 @@
 # LinkedInBot
 
-Web browser automation to create more leads for your Linkedin profile! Use sparingly because overuse can result in bans.
+This is a proof of concept and should not be used.
+
+Web browser automation to create more leads for your Linkedin profile.
 
 ## Installation with Docker
 
