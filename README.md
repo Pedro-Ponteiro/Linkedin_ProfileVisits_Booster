@@ -41,7 +41,3 @@ For Forks, please don't commit directly to "main" branch.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-## Results after one week
-
-![image](https://user-images.githubusercontent.com/48108738/138418903-0bde6dc2-b84e-4762-adf4-a7f0b6181f2f.png)
